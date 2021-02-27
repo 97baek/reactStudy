@@ -1,4 +1,5 @@
 const React = require("react");
+// import React, { useState, useRef } from "react";
 const { useState, useRef } = React;
 
 const WordRelay = () => {
@@ -10,9 +11,9 @@ const WordRelay = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (word[word.length - 1] === value[0]) {
-      setWord(`${value}`);
+      setWord(value);
+      setResult("정답입니다");
       setValue("");
-      setResult("정답");
     } else {
       setValue("");
       setResult("땡");
@@ -20,7 +21,7 @@ const WordRelay = () => {
     inputRef.current.focus();
   };
 
-  const onChangeInput = (e) => {
+  const onChange = (e) => {
     setValue(e.target.value);
   };
 
@@ -28,7 +29,7 @@ const WordRelay = () => {
     <>
       <div>{word}</div>
       <form onSubmit={onSubmit}>
-        <input ref={inputRef} onChange={onChangeInput} value={value} />
+        <input ref={inputRef} value={value} onChange={onChange} />
         <button>입력!</button>
       </form>
       <div>{result}</div>
@@ -37,3 +38,4 @@ const WordRelay = () => {
 };
 
 module.exports = WordRelay;
+// export default WordRelay;
