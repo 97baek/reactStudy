@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // 클래스의 경우 life cycle
 // constructor -> render -> ref -> componentDidMount
@@ -17,15 +17,25 @@ const scores = {
   paper: -1,
 };
 
-let interval;
-let timout;
-let isStop = false;
+const computerChoice = (imgCoord) => {
+  return Object.entries(rspCoords).find(function (v) {
+    return v[1] === imgCoord;
+  })[0];
+};
 
 const RSP = () => {
   const [result, setResult] = useState("");
   const [imgCoord, setImgCoord] = useState(rspCoords.rock);
   const [score, setScore] = useState(scores.rock);
   const interval = useRef();
+  const isStop = useRef(false);
+
+  useEffect(() => {
+    interval.current = setInterval(changeHand, 100);
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [imgCoord]); // 배열에 넣은 값들이 바뀔 때 useEffect가 실행됨
 
   const changeHand = () => {
     if (imgCoord === rspCoords.rock) {
@@ -37,33 +47,30 @@ const RSP = () => {
     }
   };
 
-  const computerChoice = (imgCoord) => {
-    return Object.entries(rspCoords).find(function (v) {
-      return v[1] === imgCoord;
-    })[0];
-  };
-
   const onClickBtn = (choice) => () => {
-    if (isStop) {
+    if (isStop.current) {
       return;
     }
-    clearInterval(current.interval);
-    const myScore = scores[choice];
-    const cpuScore = scores[this.computerChoice(imgCoord)];
-    const diff = myScore - cpuScore;
-    if (diff === 0) {
-      setResult("비김");
-    } else if ([-1, 2].includes(diff)) {
-      setResult("이김!");
-      setScore((prevScore) => prevScore + 1);
-    } else {
-      setResult("짐");
-      setScore((prevScore) => prevScore - 1);
+    if (interval.current) {
+      clearInterval(interval.current);
+      const myScore = scores[choice];
+      const cpuScore = scores[computerChoice(imgCoord)];
+      const diff = myScore - cpuScore;
+      if (diff === 0) {
+        setResult("비김");
+      } else if ([-1, 2].includes(diff)) {
+        setResult("이김!");
+        setScore((prevScore) => prevScore + 1);
+      } else {
+        setResult("짐");
+        setScore((prevScore) => prevScore - 1);
+      }
+      isStop.current = true;
+      setTimeout(() => {
+        isStop.current = false;
+        interval.current = setInterval(changeHand, 100);
+      }, 1000);
     }
-    this.isStop = true;
-    setTimeout(() => {
-      interval.current = setInterval(changeHand, 100);
-    });
   };
 
   return (
