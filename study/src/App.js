@@ -1,44 +1,62 @@
-import React, { useState, useRef, useEffect } from "react";
-// import Try from "./Try.jsx";
-import TodoList from "./TodoList.jsx";
-import "./App.css";
+import React, { useState, useRef, useMemo, useCallback } from "react";
+import CreateUser from "./CreateUser";
+import UserList from "./UserList";
+
+function countActiveUsers(users) {
+  console.log("활성 사용자 수 세는중");
+  return users.filter((user) => user.active).length;
+}
 
 function App() {
-  const [value, setValue] = useState("");
-  const [todos, setTodos] = useState(["할일1"]);
-  const inputRef = useRef();
+  const [users, setUsers] = useState([
+    { id: 1, username: "baek", email: "1234@naver.com", active: true },
+    { id: 2, username: "sang", email: "sang@gmail.com", active: false },
+    { id: 3, username: "heun", email: "heun@hanmail.com", active: false },
+  ]);
 
-  useEffect(() => {
-    console.log("렌더링!!");
-  }, [todos]);
+  const [input, setInput] = useState({
+    username: "",
+    email: "",
+  });
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    setTodos([...todos, value]);
-    setValue("");
-    inputRef.current.focus();
-  };
+  const nextId = useRef(4);
 
-  const inputChangeHandler = (e) => {
-    setValue(e.target.value);
-  };
+  const { username, email } = input;
+
+  const onChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setInput((input) => ({
+      ...input,
+      [name]: value,
+    }));
+  }, []);
+
+  const onCreate = useCallback(() => {
+    setUsers((users) => [...users, { id: nextId.current, username, email }]);
+    setInput({
+      username: "",
+      email: "",
+    });
+    nextId.current += 1;
+  }, [username, email]);
+
+  const onRemove = useCallback((id) => {
+    setUsers((users) => users.filter((user) => user.id !== id));
+  }, []);
+
+  const onToggle = useCallback((id) => {
+    setUsers((users) =>
+      users.map((user) => (user.id === id ? { ...user, active: !user.active } : user))
+    );
+  }, []);
+
+  const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
     <>
-      <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0` }} />
-      <div>
-        <button id="rock" className="btn" onClick={onClickBtn("rock")}>
-          바위
-        </button>
-        <button id="scissor" className="btn" onClick={onClickBtn("scissors")}>
-          가위
-        </button>
-        <button id="paper" className="btn" onClick={onClickBtn("paper")}>
-          보
-        </button>
-        <div>{result}</div>
-        <div>현재 {score}점</div>
-      </div>
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
+      <UserList users={users} onToggle={onToggle} onRemove={onRemove} />
+      <div>활성 사용자 수: {count}</div>
     </>
   );
 }
