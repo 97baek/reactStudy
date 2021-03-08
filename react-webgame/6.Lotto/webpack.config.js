@@ -2,7 +2,7 @@ const path = require("path");
 const RefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-  name: "RSP-setting",
+  name: "Lotto-setting",
   mode: "development", // 실서비스에선 production으로 변경
   devtool: "eval", // 빠르게 하겠다는 뜻, 실서비스에선 hidden-source-map
   resolve: {
@@ -20,10 +20,17 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: [
-            ["@babel/preset-env", { targets: { browsers: ["> 5% in KR", "last 2 chrome versions"] } }],
+            [
+              "@babel/preset-env",
+              { targets: { browsers: ["> 5% in KR", "last 2 chrome versions"] } },
+            ],
             ["@babel/preset-react"],
           ],
-          plugins: ["@babel/plugin-proposal-class-properties", "react-refresh/babel", "react-hot-loader/babel"],
+          plugins: [
+            "@babel/plugin-proposal-class-properties",
+            "react-refresh/babel",
+            "react-hot-loader/babel",
+          ],
         },
       },
     ],
