@@ -113,39 +113,16 @@ function App() {
   // const count = useMemo(() => countActiveUsers(users), [users]);
 
   // UserDispatch라는 이름으로 내보내줌.
-  const [{ username, email }, onChange, onReset] = useInput({
-    username: "",
-    email: "",
-  });
+
   const [state, dispatch] = useReducer(reducer, initialState);
-  const nextId = useRef(4);
 
   const { users } = state;
-
-  const onCreate = useCallback(() => {
-    dispatch({
-      type: "CREATE_USER",
-      user: {
-        id: nextId.current,
-        username,
-        email,
-      },
-    });
-    onReset();
-    nextId.current += 1;
-  }, [username, email, onReset]);
 
   const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
     <UserDispatch.Provider value={dispatch}>
-      <CreateUser
-        value={dispatch}
-        username={username}
-        email={email}
-        onChange={onChange}
-        onCreate={onCreate}
-      />
+      <CreateUser />
       <UserList users={users} />
       <div>활성 사용자 수: {count}</div>
     </UserDispatch.Provider>
