@@ -18,14 +18,14 @@ export const CHANGE_TURN = "CHANGE_TURN";
 const reducer = (state, action) => {
   switch (action.type) {
     case SET_WINNER:
+      // state.winner=action.winner; 이렇게 하면 안됨
       return {
         ...state,
         winner: action.winner,
       };
-
     case CLICK_CELL: {
       const tableData = [...state.tableData];
-      tableData[action.row] = [...tableData[action.row]]; // immer 라이브러리로 가독성을 향상시킬 수 있음
+      tableData[action.row] = [...tableData[action.row]]; // immer라는 라이브러리로 가독성 문제 해결
       tableData[action.row][action.cell] = state.turn;
       return {
         ...state,
@@ -41,17 +41,12 @@ const reducer = (state, action) => {
     }
   }
 };
+
 const TicTacToe = () => {
-  //   const [winner, setWinner] = useState("");
-  //   const [tableData, setTableData] = useState([
-  //     ["", "", ""],
-  //     ["", "", ""],
-  //     ["", "", ""],
-  //   ]);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onClickTable = useCallback(() => {
-    dispatch({ type: "SET_WINNER", winner: "0" });
+    dispatch({ type: SET_WINNER, winner: "O" });
   }, []);
 
   return (

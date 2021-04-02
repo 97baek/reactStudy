@@ -45,7 +45,10 @@ const NumBaseball = memo(() => {
         }
       }
       console.log(strike, ball);
-      setTries((prevTries) => [...prevTries, { try: value, result: `${strike}스트라이크 ${ball}볼입니다` }]);
+      setTries((prevTries) => [
+        ...prevTries,
+        { try: value, result: `${strike}스트라이크 ${ball}볼입니다` },
+      ]);
 
       setValue("");
       if (tries.length === 10) {
