@@ -52,7 +52,7 @@ const getTdText = (code) => {
     case CODE.QUESTION_MINE:
       return "❓";
     default:
-      return "";
+      return code || "";
   }
 };
 
@@ -98,7 +98,7 @@ const Td = ({ rowIndex, cellIndex }) => {
           return;
         case CODE.QUESTION:
         case CODE.QUESTION_MINE:
-          dispatch({ NORMALIZE_CELL, row: rowIndex, cell: cellIndex });
+          dispatch({ type: NORMALIZE_CELL, row: rowIndex, cell: cellIndex });
           return;
         default:
           return;
